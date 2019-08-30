@@ -1,0 +1,26 @@
+<a class="justify-content-center" (click)="onSelect()">
+  <!-- Card -->
+  <div class="card">
+    <!-- Card content -->
+    <div class="card-body">
+      <!-- Title -->
+      <div>
+        <span class="badge badge-pill badge-primary float-right">{{ sensorData?.when | date:'dd.MM.yyyy HH:mm:ss' }}</span>
+        <h4 class="card-title font-weight-bold">{{ room.name }}</h4>
+      </div>
+      <hr>
+      <!-- Text -->
+      <div class="row card-text">
+        <div style="font-size: 2rem;" class="col-6 col-sm-12">
+          <i [ngClass]="getTemperatureIconAndColor()" class="fas pr-3"></i>
+          <span>{{ sensorData?.temperature }}&deg;C</span>
+          <i [ngClass]="getTendencyIcon()" class="pl-2"></i>
+        </div>
+        <div style="font-size: 2rem;" class="col-6 col-sm-12">
+          <i class="fas fa-tint fas-lg blue-text pr-3"></i>
+          <span>{{ sensorData?.humidity }}%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</a>

@@ -1,14 +1,71 @@
+<nav class="navbar navbar-expand-lg navbar-dark indigo sticky-top">
+  <a class="navbar-brand" [routerLink]="[ '/' ]">SensorData</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
+    aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation" (click)="toggleMenu()">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarText" [ngClass]="{'show': showMenu}">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link">Home
+          <span class="sr-only">(current)</span>
+        </a>
+      </li>
 
-    <!-- Start your project here-->
-<div style="height: 100vh">
-  <div class="flex-center flex-column">
-    <h1 class="animated fadeIn mb-4">Material Design for Bootstrap (Angular)</h1>
+      <li class="nav-item active">
+        <a class="nav-link">FOO
+        </a>
+      </li>
 
-    <h5 class="animated fadeIn mb-3">Thank you for using our product. We're glad you're with us.</h5>
-    <h6 class="animated fadeIn mb-3">Start browsing <a href="https://mdbootstrap.com/angular">documentation</a>.</h6>
-
-    <p class="animated fadeIn text-muted">MDB Team</p>
+      <li class="nav-item active">
+        <a class="nav-link">MOO
+        </a>
+      </li>
+    </ul>
   </div>
+</nav>
+<div class="alert alert-primary text-center" role="alert">
+  <span>
+    {{ time | async | date:'dd.MM.yyyy HH:mm:ss' }}
+  </span>
 </div>
-<!-- /Start your project here-->
-    
+<router-outlet></router-outlet>
+
+<!-- <div class="container">
+  <app-room *ngFor="let room of rooms; let i = index" [room]="room"></app-room>  
+</div> -->
+
+<!-- Card -->
+
+<!-- <div class="container">
+  <div class="row">
+
+    <div class="col-sm-12 col-lg-6 cell">
+      <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Kinderzimmer</h4>
+            <hr>
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-12">
+                  <p class="card-text" style="text-decoration: underline">
+                    Temperatur
+                    <canvas id="lineChart" #chart></canvas>
+                  </p>
+                </div>
+                <div class="col-sm-12">
+                  <p class="card-text" style="text-decoration: underline">
+                    Luftfeuchtigkeit
+                  </p>
+                  <canvas mdbChart [chartType]="chartType" [datasets]="chartDatasets" [labels]="chartLabels" [colors]="chartColors"
+                    [options]="chartOptions" [legend]="true" (chartHover)="chartHovered($event)"
+                    (chartClick)="chartClicked($event)"></canvas>
+                </div>
+              </div>
+              <hr>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div> -->

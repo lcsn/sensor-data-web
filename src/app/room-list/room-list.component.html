@@ -1,0 +1,7 @@
+<div class="container">
+  <div class="row">
+    <app-room-list-item class="col-sm-12 col-lg-4" *ngFor="let room of rooms; let i = index" [room]="room"
+      [index]="rooms.indexOf(room)">
+    </app-room-list-item>
+  </div>
+</div>
