@@ -4,7 +4,10 @@
   </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
     aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation" (click)="toggleMenu()">
-    <!-- <span class="navbar-toggler-icon"></span> --><i class="fas fa-bars fa-lg white-text"></i>
+    <!-- <span class="navbar-toggler-icon"></span> -->
+    <!-- <i class="fas fa-bars fa-lg white-text"></i> -->
+    <mdb-icon class="fa-lg white-text" fas icon="bars"></mdb-icon>
+
   </button>
   <div class="collapse navbar-collapse" id="navbarText" [ngClass]="{'show': showMenu}">
     <ul class="navbar-nav mr-auto">
@@ -26,10 +29,15 @@
     </ul>
   </div>
 </nav>
-<div class="alert alert-primary text-center" role="alert">
-  <span>
-    {{ time | async | date:'dd.MM.yyyy HH:mm:ss' }}
-  </span>
+<div>
+    <div class="alert alert-primary text-center" role="alert">
+        <span>
+          {{ time | async | date:'dd.MM.yyyy HH:mm:ss' }}
+        </span>
+      </div>
+      <p class="display-inline float-right">
+          <mdb-icon fas icon="clock"></mdb-icon>
+      </p>
 </div>
 <router-outlet></router-outlet>
 

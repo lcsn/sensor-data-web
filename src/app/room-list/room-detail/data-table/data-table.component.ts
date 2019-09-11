@@ -1,15 +1,16 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { MdbTablePaginationComponent, MdbTableDirective } from 'angular-bootstrap-md';
 
 @Component({
   selector: 'app-data-table',
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.scss']
 })
-export class DataTableComponent implements OnInit {
+export class DataTableComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('dataTable', {static: true}) dataTable: ElementRef;
-
-  tabledata = [
+  @ViewChild(MdbTablePaginationComponent, { static: true }) mdbTablePagination: MdbTablePaginationComponent;
+  @ViewChild(MdbTableDirective, { static: true }) mdbTable: MdbTableDirective;
+  elements = [
     {id: 1, temperature: 19, humidity: 39, creationDate: new Date()},
     {id: 2, temperature: 20, humidity: 40, creationDate: new Date()},
     {id: 3, temperature: 21, humidity: 41, creationDate: new Date()},
@@ -18,11 +19,20 @@ export class DataTableComponent implements OnInit {
     {id: 6, temperature: 24, humidity: 44, creationDate: new Date()},
     {id: 8, temperature: 25, humidity: 45, creationDate: new Date()}
   ];
-
-  constructor() { }
+  previous: any = [];
+  constructor(private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
-    // this.dataTable.nativeElement.DataTable();
+    this.mdbTable.setDataSource(this.elements);
+    this.elements = this.mdbTable.getDataSource();
+    this.previous = this.mdbTable.getDataSource();
   }
 
+  ngAfterViewInit() {
+    this.mdbTablePagination.setMaxVisibleItemsNumberTo(5);
+
+    this.mdbTablePagination.calculateFirstItemIndex();
+    this.mdbTablePagination.calculateLastItemIndex();
+    this.cdRef.detectChanges();
+  }
 }
