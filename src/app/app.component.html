@@ -1,8 +1,10 @@
-<nav class="navbar navbar-expand-lg navbar-dark indigo sticky-top">
-  <a class="navbar-brand" [routerLink]="[ '/' ]">SensorData</a>
+<nav class="navbar navbar-expand-lg aqua-gradient color-block sticky-top z-depth-1">
+  <a class="navbar-brand" [routerLink]="[ '/' ]">
+    <p class="text-monospace font-weight-bold white-text">SensorData</p>
+  </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
     aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation" (click)="toggleMenu()">
-    <span class="navbar-toggler-icon"></span>
+    <!-- <span class="navbar-toggler-icon"></span> --><i class="fas fa-bars fa-lg white-text"></i>
   </button>
   <div class="collapse navbar-collapse" id="navbarText" [ngClass]="{'show': showMenu}">
     <ul class="navbar-nav mr-auto">

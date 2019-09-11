@@ -1,3 +1,29 @@
-<p>room-detail works!</p>
-
-{{selectedRoom.name}}
+<div class="container">
+  <h2>
+    <p class="text-center text-monospace">
+      <!-- <a [routerLink]="[ '/' ]">
+        <i class="float-left fas fa-chevron-circle-left fa-sm light-green-text"></i>
+      </a> -->
+      {{selectedRoom.name}}
+    </p>
+  </h2>
+  <ul class="nav nav-tabs" role="roleList">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link "
+        routerLinkActive="active active-tab"
+        [routerLinkActiveOptions]="{exact: true}"
+        [routerLink]="['charts']"
+        role="tab">
+        Grafik</a>
+    </li>
+    <li class="nav-item"role="presentation" >
+      <a class="nav-link"
+        routerLinkActive="active active-tab"
+        [routerLinkActiveOptions]="{exact: true}"
+        [routerLink]="['tables']"
+        role="tab">
+        Daten</a>
+    </li>
+  </ul>
+  <router-outlet></router-outlet>
+</div>

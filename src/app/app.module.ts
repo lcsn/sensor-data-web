@@ -12,13 +12,19 @@ import { AppRoutingModule } from './app-routing.module';
 import { RoomDetailComponent } from './room-list/room-detail/room-detail.component';
 import { RoomListComponent } from './room-list/room-list.component';
 import { RoomListItemComponent } from './room-list/room-list-item/room-list-item.component';
+import { DataChartComponent } from './room-list/room-detail/data-chart/data-chart.component';
+import { DataTableComponent } from './room-list/room-detail/data-table/data-table.component';
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     RoomListComponent,
     RoomListItemComponent,
-    RoomDetailComponent
+    RoomDetailComponent,
+    DataChartComponent,
+    DataTableComponent,
+    ErrorPageComponent
   ],
   imports: [
     BrowserModule,

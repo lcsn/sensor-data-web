@@ -1,0 +1,20 @@
+<div class="container table-responsive">
+  <table class="table table-striped table-bordered table-sm" cellspacing="0" width="100%" #dataTable>
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Temp. (&deg;C)</th>
+        <th scope="col">LF (%)</th>
+        <th scope="col">Datum</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of tabledata">
+        <th scope="row">{{data.id}}</th>
+        <td class="text-center">{{data.temperature}}</td>
+        <td class="text-center">{{data.humidity}}</td>
+        <td class="text-center">{{data.creationDate | date:'dd.MM.yyyy HH:mm:ss'}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
