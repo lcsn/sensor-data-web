@@ -24,8 +24,7 @@ export class RoomDetailComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.dataSub = this.route.data.subscribe((data: Data) => {
-      const ROOM = 'room';
-      this.selectedRoom = data[ROOM];
+      this.selectedRoom = data.room;
     });
   }
 

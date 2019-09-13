@@ -1,5 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { MdbTablePaginationComponent, MdbTableDirective } from 'angular-bootstrap-md';
+import { Room } from 'src/app/model/room.model';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute, Data } from '@angular/router';
 
 @Component({
   selector: 'app-data-table',
@@ -10,6 +13,10 @@ export class DataTableComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MdbTablePaginationComponent, { static: true }) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective, { static: true }) mdbTable: MdbTableDirective;
+
+  selectedRoom: Room;
+  dataSub: Subscription;
+
   elements = [
     {id: 1, temperature: 19, humidity: 39, creationDate: new Date()},
     {id: 2, temperature: 20, humidity: 40, creationDate: new Date()},
@@ -19,10 +26,16 @@ export class DataTableComponent implements OnInit, AfterViewInit {
     {id: 6, temperature: 24, humidity: 44, creationDate: new Date()},
     {id: 8, temperature: 25, humidity: 45, creationDate: new Date()}
   ];
+
   previous: any = [];
-  constructor(private cdRef: ChangeDetectorRef) { }
+
+  constructor(private route: ActivatedRoute, private cdRef: ChangeDetectorRef) { }
 
   ngOnInit() {
+    this.dataSub = this.route.data.subscribe((data: Data) => {
+      const ROOM = 'room';
+      this.selectedRoom = data[ROOM];
+    });
     this.mdbTable.setDataSource(this.elements);
     this.elements = this.mdbTable.getDataSource();
     this.previous = this.mdbTable.getDataSource();

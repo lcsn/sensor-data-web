@@ -18,6 +18,7 @@ export class RoomListItemComponent implements OnInit, OnDestroy {
   sensorData: SensorData;
   tendency = 'constant';
 
+  interval: any;
   sensorDataSubject = new Subject<SensorData>();
   sensorDataSubscription: Subscription;
 
@@ -31,7 +32,7 @@ export class RoomListItemComponent implements OnInit, OnDestroy {
     this.roomService.getSensorData(this.room.refName).subscribe((data: SensorData) => {
       this.sensorDataSubject.next(data);
     });
-    setInterval(() => {
+    this.interval = setInterval(() => {
       this.roomService.getSensorData(this.room.refName).subscribe((data: SensorData) => {
         this.sensorDataSubject.next(data);
       });
@@ -70,6 +71,7 @@ export class RoomListItemComponent implements OnInit, OnDestroy {
     if (this.sensorDataSubscription) {
       this.sensorDataSubscription.unsubscribe();
     }
+    clearInterval(this.interval);
   }
 
   onSelect() {

@@ -12,8 +12,7 @@ export class RoomResolver implements Resolve<Room> {
     constructor(private roomService: RoomService) {}
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Room | Observable<Room> | Promise<Room> {
-        const IDX = 'index';
-        return this.roomService.getRoomByIndex(+route.params[IDX]);
+        return this.roomService.getRoomByIndex(+route.params.index);
     }
 
 }

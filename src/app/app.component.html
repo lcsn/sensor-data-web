@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg aqua-gradient color-block sticky-top z-depth-1">
+<nav class="navbar navbar-expand-lg aqua-gradient color-block sticky-top z-depth-2">
   <a class="navbar-brand" [routerLink]="[ '/' ]">
     <p class="text-monospace font-weight-bold white-text">SensorData</p>
   </a>
@@ -6,76 +6,36 @@
     aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation" (click)="toggleMenu()">
     <!-- <span class="navbar-toggler-icon"></span> -->
     <!-- <i class="fas fa-bars fa-lg white-text"></i> -->
-    <mdb-icon class="fa-lg white-text" fas icon="bars"></mdb-icon>
+    <mdb-icon class="white-text" fas size="2x" icon="bars"></mdb-icon>
 
   </button>
-  <div class="collapse navbar-collapse" id="navbarText" [ngClass]="{'show': showMenu}">
+  <div class="collapse navbar-collapse" id="navbarText" [ngClass]="{'show': showMenu === 'in'}">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link">Home
+        <a class="nav-link" mdbWavesEffect>Home
           <span class="sr-only">(current)</span>
         </a>
       </li>
-
       <li class="nav-item active">
-        <a class="nav-link">FOO
-        </a>
+        <a class="nav-link" mdbWavesEffect>FOO</a>
       </li>
-
       <li class="nav-item active">
-        <a class="nav-link">MOO
-        </a>
+        <a class="nav-link" mdbWavesEffect>MOO</a>
       </li>
     </ul>
   </div>
 </nav>
-<div>
-    <div class="alert alert-primary text-center" role="alert">
-        <span>
-          {{ time | async | date:'dd.MM.yyyy HH:mm:ss' }}
-        </span>
-      </div>
-      <p class="display-inline float-right">
-          <mdb-icon fas icon="clock"></mdb-icon>
-      </p>
+
+<div class="alert alert-primary text-center" style="height: 48px;" role="alert" [@slideInAndOut]='watchState'>
+  <span>
+    {{ date | date:'dd.MM.yyyy HH:mm:ss' }}
+  </span>
 </div>
+<!-- <ng-template #spacer>
+  <div style="height: 1.25rem;"></div>
+</ng-template> -->
+
+<p style="position: absolute; right: 25px; top: 87px; cursor: pointer;" (click)="toggleWatch()">
+    <mdb-icon size="lg" fas icon="clock"></mdb-icon>
+</p>
 <router-outlet></router-outlet>
-
-<!-- <div class="container">
-  <app-room *ngFor="let room of rooms; let i = index" [room]="room"></app-room>  
-</div> -->
-
-<!-- Card -->
-
-<!-- <div class="container">
-  <div class="row">
-
-    <div class="col-sm-12 col-lg-6 cell">
-      <div class="card">
-          <div class="card-body">
-            <h4 class="card-title">Kinderzimmer</h4>
-            <hr>
-            <div class="container">
-              <div class="row">
-                <div class="col-sm-12">
-                  <p class="card-text" style="text-decoration: underline">
-                    Temperatur
-                    <canvas id="lineChart" #chart></canvas>
-                  </p>
-                </div>
-                <div class="col-sm-12">
-                  <p class="card-text" style="text-decoration: underline">
-                    Luftfeuchtigkeit
-                  </p>
-                  <canvas mdbChart [chartType]="chartType" [datasets]="chartDatasets" [labels]="chartLabels" [colors]="chartColors"
-                    [options]="chartOptions" [legend]="true" (chartHover)="chartHovered($event)"
-                    (chartClick)="chartClicked($event)"></canvas>
-                </div>
-              </div>
-              <hr>
-            </div>
-          </div>
-      </div>
-    </div>
-  </div>
-</div> -->

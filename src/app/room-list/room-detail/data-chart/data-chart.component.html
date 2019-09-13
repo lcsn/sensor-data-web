@@ -1,15 +1,32 @@
 <div class="container">
-  <h4>
-    <p class="text-center text-monospace">
-      Temperatur
-    </p>
-  </h4>
+  <p class="text-center text-monospace">
+    Temperatur
+  </p>
   <canvas id="temperatureChart" #temperatureChart></canvas>
+  <!-- <div class="btn-group btn-group-sm" style="width: 100%;" role="group">
+    <button mdbBtn size="sm" type="button" [ngClass]="{'cyan': temperatureRange === '3h'}" [disabled]="temperatureRange === '3h'" (click)="setTemperatureRange('3h')" mdbWavesEffect>3 Std.</button>
+    <button mdbBtn size="sm" type="button" [ngClass]="{'cyan': temperatureRange === '7d'}" [disabled]="temperatureRange === '7d'" (click)="setTemperatureRange('7d')" mdbWavesEffect>7 Tage</button>
+    <button mdbBtn size="sm" type="button" [ngClass]="{'cyan': temperatureRange === '14d'}" [disabled]="temperatureRange === '14d'" (click)="setTemperatureRange('14d')" mdbWavesEffect>14 Tage</button>
+  </div> -->
+  <div class="btn-group" role="group" style="width: 100%;">
+      <button mdbBtn size="sm" type="button" color="info" class="waves-light" mdbWavesEffect>
+          <mdb-icon fas icon="angle-left"></mdb-icon>
+      </button>
+      <button mdbBtn size="sm" type="button" color="info" class="waves-light" (click)="onChangeRange()" mdbWavesEffect>
+        {{selectedRange.label}}
+      </button>
+      <button mdbBtn size="sm" type="button" color="info" class="waves-light" mdbWavesEffect>
+        <mdb-icon fas icon="angle-right"></mdb-icon>
+      </button>
+  </div>
   <hr>
-  <h4>
-    <p class="text-center text-monospace">
-      Luftfeuchtigkeit
-    </p>
-  </h4>
+  <p class="text-center text-monospace">
+    Luftfeuchtigkeit
+  </p>
   <canvas id="humidityChart" #humidityChart></canvas>
+  <div class="btn-group btn-group-sm" style="width: 100%;" role="group">
+    <button mdbBtn size="sm" type="button" [ngClass]="{'cyan': humidityRange === '3h'}" (click)="setHumidityRange('3h')" mdbWavesEffect>3 Std.</button>
+    <button mdbBtn size="sm" type="button" [ngClass]="{'cyan': humidityRange === '7d'}" (click)="setHumidityRange('7d')" mdbWavesEffect>7 Tage</button>
+    <button mdbBtn size="sm" type="button" [ngClass]="{'cyan': humidityRange === '14d'}" (click)="setHumidityRange('14d')" mdbWavesEffect>14 Tage</button>
+  </div>
 </div>
