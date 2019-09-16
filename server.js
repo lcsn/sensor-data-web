@@ -1,3 +1,5 @@
+const _ = require('lodash');
+
 //Install express server    
 const express = require('express');
 const app = express();
@@ -20,14 +22,56 @@ DATA = {
   schlafzimmer: { temperature: 24, humidity: 49 }
 }
 
+ranges = {
+  '3h': { num: 36 },
+  '6h': { num: 72 },
+  '12h': { num: 144 },
+  '1d': { num: 288 }
+};
+
 TENDENCIES = [
   'up',
   'constant',
   'down'
 ]
 
-app.get('/dht22/:location', function (req, res) {
+app.get('/dht22/:location', (req, res) => {
   return res.json(DATA[req.params.location]);
+});
+
+app.get('/dht22/:location/temperature/chart', (req, res) => {
+  console.log(req.query);
+  const range = req.query.range;
+  const offset = req.query.offset;
+  return res.json({
+    labels: _.range(1, ranges[range].num),
+    values: Array.from({ length: ranges[range].num }, () => _.random(-100, 100))
+  });
+});
+
+app.get('/dht22/:location/humidity/chart', (req, res) => {
+  console.log(req.query);
+  const range = req.query.range;
+  const offset = req.query.offset;
+  return res.json({
+    labels: _.range(1, ranges[range].num),
+    values: Array.from({ length: ranges[range].num }, () => _.random(-100, 100))
+  });
+});
+
+app.get('/dht22/:location/table', (req, res) => {
+  console.log(req.query);
+  const from = req.query.from;
+  const until = req.query.until;
+  return res.json([
+    { id: 1, temperature: 19, humidity: 39, creationDate: new Date() },
+    { id: 2, temperature: 20, humidity: 40, creationDate: new Date() },
+    { id: 3, temperature: 21, humidity: 41, creationDate: new Date() },
+    { id: 4, temperature: 22, humidity: 42, creationDate: new Date() },
+    { id: 5, temperature: 23, humidity: 43, creationDate: new Date() },
+    { id: 6, temperature: 24, humidity: 44, creationDate: new Date() },
+    { id: 8, temperature: 25, humidity: 45, creationDate: new Date() }
+  ]);
 });
 
 // Start the app by listening on the default Heroku port    

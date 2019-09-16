@@ -14,64 +14,96 @@ export class DataChartComponent implements OnInit {
 
   @ViewChild('temperatureChart', { static: true }) temperatureChart: ElementRef;
   @ViewChild('humidityChart', { static: true }) humidityChart: ElementRef;
+  temperatureChartCtx: any;
+  humidityChartCtx: any;
+  temperatureLineChart: Chart;
+  humidityLineChart: Chart;
 
   selectedRoom: Room;
   dataSub: Subscription;
 
   availableRanges = [
-    {label: '3 Std.', value: '3h'},
-    {label: '6 Std.', value: '6h'},
-    {label: '12 Std.', value: '12h'},
-    {label: '24 Std.', value: '1d'},
+    { label: '3 Std.', value: '3h' },
+    { label: '6 Std.', value: '6h' },
+    { label: '12 Std.', value: '12h' },
+    { label: '24 Std.', value: '1d' },
   ];
 
-  selectedRange = this.availableRanges[0];
+  selectedTemperatureRange = this.availableRanges[0];
+  selectedHumidityRange = this.availableRanges[0];
 
-  temperatureLineChart: Chart;
-  humidityLineChart: Chart;
-
-  temperatureRange = '3h';
-  humidityRange = '3h';
+  temperatureOffset = 0;
+  humidityOffset = 0;
 
   constructor(private route: ActivatedRoute, private chartService: ChartService) { }
 
   ngOnInit() {
-    this.dataSub = this.route.data.subscribe((data: Data) => {
+    this.temperatureChartCtx = this.temperatureChart.nativeElement.getContext('2d');
+    this.humidityChartCtx = this.humidityChart.nativeElement.getContext('2d');
+    this.dataSub = this.route.parent.data.subscribe((data: Data) => {
       this.selectedRoom = data.room;
     });
-    const humidityChartCtx = this.humidityChart.nativeElement.getContext('2d');
-    this.temperatureLineChart = new Chart(
-      this.temperatureChart.nativeElement.getContext('2d'),
-      this.chartService.getTemperatureChartConfigForRange('kueche', this.temperatureRange)
-      // this.chartService.getLineChartConfig(
-      //   [1, 2, 3, 4, 5, 6, 7], [65, 59, -80, 81, 56, 55, -40]
-      // )
-    );
-    this.humidityLineChart = new Chart(
-      humidityChartCtx,
-      this.chartService.getHumidityChartConfigForRange('kueche', this.humidityRange)
-      // this.chartService.getLineChartConfig(
-      //   [1, 2, 3, 4, 5, 6, 7], [65, -59, 80, 81, -56, 55, 40]
-      // )
-    );
+    this.chartService.getTemperatureChart(
+      this.temperatureChartCtx,
+      this.selectedRoom.refName,
+      this.temperatureOffset,
+      '3h')
+      .subscribe((chart: Chart) => {
+        this.temperatureLineChart = chart;
+      });
+    this.chartService.getHumidityChart(
+      this.humidityChartCtx,
+      this.selectedRoom.refName,
+      this.humidityOffset,
+      '3h')
+      .subscribe((chart: Chart) => {
+        this.humidityLineChart = chart;
+      });
   }
 
-  setTemperatureRange(newRange: string): void {
-    this.temperatureRange = newRange;
-    this.temperatureLineChart = new Chart(
-      this.temperatureChart.nativeElement.getContext('2d'),
-      this.chartService.getTemperatureChartConfigForRange('kueche', newRange)
-    );
+  getNextSelectedRange(current: { label: string, value: string }) {
+    const i = this.availableRanges.indexOf(current);
+    return this.availableRanges[(i + 1) % this.availableRanges.length];
   }
 
-  setHumidityRange(newRange: string): void {
-    this.humidityRange = newRange;
-    console.log(this.humidityLineChart);
+  onChangeTemperatureRange() {
+    this.selectedTemperatureRange = this.getNextSelectedRange(this.selectedTemperatureRange);
+    this.chartService.getTemperatureChart(
+      this.temperatureChartCtx,
+      this.selectedRoom.refName,
+      this.temperatureOffset,
+      this.selectedTemperatureRange.value)
+      .subscribe((chart: Chart) => {
+        this.temperatureLineChart = chart;
+      });
   }
 
-  onChangeRange() {
-    const i = this.availableRanges.indexOf(this.selectedRange);
-    this.selectedRange = this.availableRanges[(i + 1) % this.availableRanges.length];
+  onChangeHumidityRange() {
+    this.selectedHumidityRange = this.getNextSelectedRange(this.selectedHumidityRange);
+    this.chartService.getHumidityChart(
+      this.humidityChartCtx,
+      this.selectedRoom.refName,
+      this.humidityOffset,
+      this.selectedHumidityRange.value)
+      .subscribe((chart: Chart) => {
+        this.humidityLineChart = chart;
+      });
+  }
+
+  onDecreaseTemperatureOffset() {
+    this.temperatureOffset = this.temperatureOffset < 1 ? 0 : this.temperatureOffset - 1;
+  }
+
+  onIncreaseTemperatureOffset() {
+    this.temperatureOffset++;
+  }
+
+  onDecreaseHumidityOffset() {
+    this.humidityOffset = this.humidityOffset < 1 ? 0 : this.humidityOffset - 1;
+  }
+
+  onIncreaseHumidityOffset() {
+    this.humidityOffset++;
   }
 
 }

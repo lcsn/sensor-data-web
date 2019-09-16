@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
+import { Observable, Observer, throwError } from 'rxjs';
+import { Chart } from 'chart.js'
+import { map, catchError } from 'rxjs/operators';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChartService {
-
-  ranges = {
-    '3h': { num: 36 },
-    '7d': { num: 144 },
-    '14d': { num: 4032 },
-  };
 
   lineConfigTemplate = {
     type: 'line',
@@ -39,42 +37,66 @@ export class ChartService {
     }
   };
 
-  getLineChartConfig(labels: Array<any>, data: Array<any>) {
-    const config = this.lineConfigTemplate;
-    config.data.labels = labels;
-    config.data.datasets[0].data = data;
-    return config;
+  constructor(private http: HttpClient) { }
+
+  getLineChartConfigTemplate() {
+    return Object.assign({}, this.lineConfigTemplate);
   }
 
-  getTemperatureChartConfigForRange(roomRef: string, range: string) {
-    const config = this.lineConfigTemplate;
-    const data = this.getTemperatureDataByRangeAndRoomRef(roomRef, range);
-    config.data.labels = data.labels;
-    config.data.datasets[0].data = data.values;
-    return config;
+  getTemperatureChart(ctx: any, room: string, offset: number, range: string): Observable<Chart> {
+    return this.getTemperatureDataByRange(room, offset, range).pipe(map((data: { labels: Array<number>, values: Array<number> }) => {
+      const config = this.getLineChartConfigTemplate();
+      config.data.labels = data.labels;
+      config.data.datasets[0].data = data.values;
+      return new Chart(ctx, config);
+    }));
+    // new Observable((observer: Observer<Chart>) => {
+    //   setTimeout(() => {
+    //     observer.next(new Chart(ctx, this.getTemperatureChartConfig(room, offset, range)));
+    //   }, 500);
+    // });
   }
 
-  getTemperatureDataByRangeAndRoomRef(roomref: string, range: string) {
-    return {
-      labels: _.range(1, this.ranges[range].num),
-      values: Array.from({length: this.ranges[range].num}, () => _.random(-100, 100))
-    };
+  getHumidityChart(ctx: any, room: string, offset: number, range: string): Observable<Chart> {
+    return this.getHumidityDataByRange(room, offset, range).pipe(map((data: { labels: Array<number>, values: Array<number> }) => {
+      const config = this.getLineChartConfigTemplate();
+      config.data.labels = data.labels;
+      config.data.datasets[0].data = data.values;
+      return new Chart(ctx, config);
+    }));
+    // return new Observable((observer: Observer<Chart>) => {
+    //   setTimeout(() => {
+    //     observer.next(new Chart(ctx, this.getHumidityChartConfig(room, offset, range)));
+    //   }, 500);
+    // });
   }
 
-  getHumidityChartConfigForRange(roomRef: string, range: string) {
-    const config = this.lineConfigTemplate;
-    const data = this.getHumidityDataByRangeAndRoomRef(roomRef, range);
-    config.data.labels = data.labels;
-    config.data.datasets[0].data = data.values;
-    return config;
+  getTemperatureDataByRange(room: string, offset: number, range: string): Observable<{ labels: Array<number>, values: Array<number> }> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    let params = new HttpParams();
+    params = params.append('offset', '' + offset);
+    params = params.append('range', range);
+    return this.http.get('http://localhost:5000/dht22/' + room + '/temperature/chart', { headers, params })
+      .pipe(map((data: { labels: Array<number>, values: Array<number> }) => {
+        return data;
+      }))
+      .pipe(catchError((error: Response) => {
+        return throwError('Could not load temperature data: ' + error);
+      }));
   }
 
-  getHumidityDataByRangeAndRoomRef(roomref: string, range: string) {
-    return {
-      labels: _.range(1, this.ranges[range].num),
-      values: Array.from({length: this.ranges[range].num}, () => _.random(-100, 100))
-    };
+  getHumidityDataByRange(room: string, offset: number, range: string): Observable<{ labels: Array<number>, values: Array<number> }> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    let params = new HttpParams();
+    params = params.append('offset', '' + offset);
+    params = params.append('range', range);
+    return this.http.get('http://localhost:5000/dht22/' + room + '/humidity/chart', { headers, params })
+      .pipe(map((data: { labels: Array<number>, values: Array<number> }) => {
+        return data;
+      }))
+      .pipe(catchError((error: Response) => {
+        return throwError('Could not load humidity data: ' + error);
+      }));
   }
 
-  constructor() { }
 }

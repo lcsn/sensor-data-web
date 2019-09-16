@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Room } from '../model/room.model';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { SensorData } from '../model/sensor-data.model';
 
 @Injectable({
@@ -45,6 +45,21 @@ export class RoomService {
 
   getRoomByIndex(index: number): Room {
     return this.rooms[index];
+  }
+
+  getSensorDataTable(room: string, from: Date, until: Date)
+    : Observable<{ id: number, temperature: number, humidity: number, creationDate: Date }> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    let params = new HttpParams();
+    params = params.append('from', '' + from);
+    params = params.append('until', '' + until);
+    return this.http.get('http://localhost:5000/dht22/' + room + '/table', { headers, params })
+      .pipe(map((data: { id: number, temperature: number, humidity: number, creationDate: Date }) => {
+        return data;
+      }))
+      .pipe(catchError((error: Response) => {
+        return throwError('Could not load sensor data for table: ' + error);
+      }));
   }
 
 }
