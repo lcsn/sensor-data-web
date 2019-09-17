@@ -15,6 +15,7 @@ import { RoomListItemComponent } from './room-list/room-list-item/room-list-item
 import { DataChartComponent } from './room-list/room-detail/data-chart/data-chart.component';
 import { DataTableComponent } from './room-list/room-detail/data-table/data-table.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
+import { BlinkDirective } from './directive/blink.directive';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { ErrorPageComponent } from './error-page/error-page.component';
     RoomDetailComponent,
     DataChartComponent,
     DataTableComponent,
-    ErrorPageComponent
+    ErrorPageComponent,
+    BlinkDirective
   ],
   imports: [
     BrowserModule,

@@ -14,6 +14,8 @@ export class DataTableComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MdbTablePaginationComponent, { static: true }) mdbTablePagination: MdbTablePaginationComponent;
   @ViewChild(MdbTableDirective, { static: true }) mdbTable: MdbTableDirective;
+  @ViewChild('fromDateElRef', { static: true }) fromDateElRef: ElementRef;
+  @ViewChild('untilDateElRef', { static: true }) untilDateElRef: ElementRef;
 
   selectedRoom: Room;
   dataSub: Subscription;
@@ -24,39 +26,48 @@ export class DataTableComponent implements OnInit, AfterViewInit {
   // fromDateAsString: string;
   untilDate = new Date();
   // untilDateAsString: string;
-  pageSize = 10;
+  pageSize = 6;
 
-  elements = [
-    { id: 1, temperature: 19, humidity: 39, creationDate: new Date() },
-    { id: 2, temperature: 20, humidity: 40, creationDate: new Date() },
-    { id: 3, temperature: 21, humidity: 41, creationDate: new Date() },
-    { id: 4, temperature: 22, humidity: 42, creationDate: new Date() },
-    { id: 5, temperature: 23, humidity: 43, creationDate: new Date() },
-    { id: 6, temperature: 24, humidity: 44, creationDate: new Date() },
-    { id: 8, temperature: 25, humidity: 45, creationDate: new Date() }
-  ];
-
+  elements: any = [];
   previous: any = [];
 
-  constructor(private roomService: RoomService, private route: ActivatedRoute, private cdRef: ChangeDetectorRef) { }
+  constructor(
+    private roomService: RoomService,
+    private route: ActivatedRoute,
+    private cdRef: ChangeDetectorRef) { }
 
-  @HostListener('input') oninput() {
+  @HostListener('input', ['$event.target']) oninput(target: any) {
     this.searchItems();
   }
 
   ngOnInit() {
-    // this.untilDate.setDate(this.fromDate.getDate() - 1);
+    this.fromDate.setDate(this.untilDate.getDate() - 1);
     // this.fromDateAsString = '2011-01-01';
     // this.untilDateAsString = this.untilDate.toLocaleString();
     this.dataSub = this.route.parent.data.subscribe((data: Data) => {
       this.selectedRoom = data.room;
     });
-    this.roomService.getSensorDataTable(this.selectedRoom.refName, this.fromDate, this.untilDate)
-      .subscribe((data: { id: number, temperature: number, humidity: number, creationDate: Date }) => {
-        this.mdbTable.setDataSource(data);
-        this.elements = this.mdbTable.getDataSource();
-        this.previous = this.mdbTable.getDataSource();
-      });
+    this.reloadTable();
+    this.fromDateElRef.nativeElement.addEventListener('input', (e: Event) => { this.onChangeFromDate(e); } );
+    this.untilDateElRef.nativeElement.addEventListener('input', (e: Event) => { this.onChangeUntilDate(e); } );
+  }
+
+  onChangeFromDate(e: Event) {
+    const date = Date.parse(e.target.value);
+    if (date) {
+      this.fromDate = new Date(date);
+    } else {
+      this.fromDate = null;
+    }
+  }
+
+  onChangeUntilDate(e: Event) {
+    const date = Date.parse(e.target.value);
+    if (date) {
+      this.untilDate = new Date(date);
+    } else {
+      this.untilDate = null;
+    }
   }
 
   ngAfterViewInit() {
@@ -78,6 +89,15 @@ export class DataTableComponent implements OnInit, AfterViewInit {
       this.elements = this.mdbTable.searchLocalDataBy(this.searchText);
       this.mdbTable.setDataSource(prev);
     }
+  }
+
+  reloadTable() {
+    this.roomService.getSensorDataTable(this.selectedRoom.refName, this.fromDate, this.untilDate)
+      .subscribe((data: { id: number, temperature: number, humidity: number, creationDate: Date }) => {
+        this.mdbTable.setDataSource(data);
+        this.elements = this.mdbTable.getDataSource();
+        this.previous = this.mdbTable.getDataSource();
+      });
   }
 
 }

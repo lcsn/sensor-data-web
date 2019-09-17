@@ -35,6 +35,9 @@ export class DataChartComponent implements OnInit {
   temperatureOffset = 0;
   humidityOffset = 0;
 
+  changePending = false;
+  changeDelay: number;
+
   constructor(private route: ActivatedRoute, private chartService: ChartService) { }
 
   ngOnInit() {
@@ -43,19 +46,28 @@ export class DataChartComponent implements OnInit {
     this.dataSub = this.route.parent.data.subscribe((data: Data) => {
       this.selectedRoom = data.room;
     });
+    this.reloadTemperatureChart();
+    this.reloadHumidityChart();
+  }
+
+  reloadTemperatureChart() {
+    // this.temperatureChartCtx.clear(0, 0, this.temperatureChartCtx.width, this.temperatureChartCtx.height);
     this.chartService.getTemperatureChart(
       this.temperatureChartCtx,
       this.selectedRoom.refName,
       this.temperatureOffset,
-      '3h')
+      this.selectedTemperatureRange.value)
       .subscribe((chart: Chart) => {
         this.temperatureLineChart = chart;
       });
+  }
+
+  reloadHumidityChart() {
     this.chartService.getHumidityChart(
       this.humidityChartCtx,
       this.selectedRoom.refName,
       this.humidityOffset,
-      '3h')
+      this.selectedHumidityRange.value)
       .subscribe((chart: Chart) => {
         this.humidityLineChart = chart;
       });
@@ -68,42 +80,46 @@ export class DataChartComponent implements OnInit {
 
   onChangeTemperatureRange() {
     this.selectedTemperatureRange = this.getNextSelectedRange(this.selectedTemperatureRange);
-    this.chartService.getTemperatureChart(
-      this.temperatureChartCtx,
-      this.selectedRoom.refName,
-      this.temperatureOffset,
-      this.selectedTemperatureRange.value)
-      .subscribe((chart: Chart) => {
-        this.temperatureLineChart = chart;
-      });
+    this.changeDelay = 500;
+    if (!this.changePending) {
+      this.changePending = true;
+      setTimeout(() => {
+        this.reloadTemperatureChart();
+        this.changePending = false;
+      }, this.changeDelay);
+    }
   }
 
   onChangeHumidityRange() {
     this.selectedHumidityRange = this.getNextSelectedRange(this.selectedHumidityRange);
-    this.chartService.getHumidityChart(
-      this.humidityChartCtx,
-      this.selectedRoom.refName,
-      this.humidityOffset,
-      this.selectedHumidityRange.value)
-      .subscribe((chart: Chart) => {
-        this.humidityLineChart = chart;
-      });
+    this.changeDelay = 500;
+    if (!this.changePending) {
+      this.changePending = true;
+      setTimeout(() => {
+        this.reloadHumidityChart();
+        this.changePending = false;
+      }, this.changeDelay);
+    }
   }
 
   onDecreaseTemperatureOffset() {
     this.temperatureOffset = this.temperatureOffset < 1 ? 0 : this.temperatureOffset - 1;
+    this.reloadTemperatureChart();
   }
 
   onIncreaseTemperatureOffset() {
     this.temperatureOffset++;
+    this.reloadTemperatureChart();
   }
 
   onDecreaseHumidityOffset() {
     this.humidityOffset = this.humidityOffset < 1 ? 0 : this.humidityOffset - 1;
+    this.reloadHumidityChart();
   }
 
   onIncreaseHumidityOffset() {
     this.humidityOffset++;
+    this.reloadHumidityChart();
   }
 
 }

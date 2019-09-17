@@ -1,18 +1,27 @@
 <div class="container table-responsive">
-  <div class="row">
-      <div class="col-xs-6 col-md-6 mx-auto">
-      <!-- <div class="md-form">
-        <input type="date" id="fromDate" class="form-control" value="{{fromDate | date:'yyyy-mm-dd HH:mm:ss'}}">
+  <div class="mx-auto">
+    <div class="md-form">
+      <input type="text" class="form-control" [(ngModel)]="searchText" (keyup)="searchItems()" id="search-input"
+        mdbInput>
+      <label for="search-input">Suche ..</label>
+    </div>
+    <div class="row">
+      <div class="md-form col-5">
+        <input type="date" id="from" class="form-control" [value]="fromDate | date:'yyyy-MM-dd'" #fromDateElRef>
+        <label for="from">Auswahl von ..</label>
       </div>
-      <div class="md-form">
-        <input type="date" id="untilDate" class="form-control" [(ngModel)]="untilDateAsString">
-      </div> -->
-      <div class="md-form">
-        <input type="text" class="form-control" [(ngModel)]="searchText" (keyup)="searchItems()" id="search-input"
-          mdbInput>
-        <label for="search-input">Suche ..</label>
+      <div class="md-form col-5">
+        <input type="date" id="until" class="form-control" [value]="untilDate | date:'yyyy-MM-dd'" #untilDateElRef>
+        <label for="until">bis ..</label>
+      </div>
+      <div class="md-form col-2">
+      <button mdbBtn style="width: 100%;" (click)="reloadTable()" size="sm" type="button" color="info" class="waves-light" [disabled]="!fromDateElRef.value || !untilDateElRef.value" mdbWavesEffect>
+        <mdb-icon fas icon="redo"></mdb-icon>
+      </button>
       </div>
     </div>
+  </div>
+  <div class="row">
     <table mdbTable #tableEl="mdbTable" stickyHeader="true" hover="true" striped="true" class="z-depth-1">
       <thead class="sticky-top">
         <tr>

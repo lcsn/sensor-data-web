@@ -17,6 +17,7 @@ export class RoomListItemComponent implements OnInit, OnDestroy {
 
   sensorData: SensorData;
   tendency = 'constant';
+  // battery = 'battery-empty';
 
   interval: any;
   sensorDataSubject = new Subject<SensorData>();
@@ -67,15 +68,23 @@ export class RoomListItemComponent implements OnInit, OnDestroy {
     }
   }
 
+  shouldBlink() {
+    let result = false;
+    if (this.sensorData && (this.sensorData.battery === 'battery-empty' || this.sensorData.battery === 'battery-quarter')) {
+      result = true;
+    }
+    return result;
+  }
+
+  onSelect() {
+    this.router.navigate([this.index], { relativeTo: this.route, queryParamsHandling: 'preserve' });
+  }
+
   ngOnDestroy() {
     if (this.sensorDataSubscription) {
       this.sensorDataSubscription.unsubscribe();
     }
     clearInterval(this.interval);
-  }
-
-  onSelect() {
-    this.router.navigate([this.index], { relativeTo: this.route, queryParamsHandling: 'preserve' });
   }
 
 }

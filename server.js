@@ -35,6 +35,14 @@ TENDENCIES = [
   'down'
 ]
 
+BATTERY= [
+  'battery-empty',
+  'battery-quarter',
+  'battery-half',
+  'battery-three-quarters',
+  'battery-full'
+];
+
 app.get('/dht22/:location', (req, res) => {
   return res.json(DATA[req.params.location]);
 });
@@ -70,6 +78,11 @@ app.get('/dht22/:location/table', (req, res) => {
     { id: 4, temperature: 22, humidity: 42, creationDate: new Date() },
     { id: 5, temperature: 23, humidity: 43, creationDate: new Date() },
     { id: 6, temperature: 24, humidity: 44, creationDate: new Date() },
+    { id: 8, temperature: 25, humidity: 45, creationDate: new Date() },
+    { id: 3, temperature: 21, humidity: 41, creationDate: new Date() },
+    { id: 4, temperature: 22, humidity: 42, creationDate: new Date() },
+    { id: 5, temperature: 23, humidity: 43, creationDate: new Date() },
+    { id: 6, temperature: 24, humidity: 44, creationDate: new Date() },
     { id: 8, temperature: 25, humidity: 45, creationDate: new Date() }
   ]);
 });
@@ -82,22 +95,27 @@ app.listen(PORT, () => {
     DATA['kueche'].humidity = Math.round(Math.random() * 100);
     DATA['kueche'].when = new Date();
     DATA['kueche'].tendency = TENDENCIES[Math.floor(Math.random()*TENDENCIES.length)];
+    DATA['kueche'].battery = BATTERY[Math.floor(Math.random()*BATTERY.length)];
     DATA['kinderzimmer'].temperature = Math.round(Math.random() * 60);
     DATA['kinderzimmer'].humidity = Math.round(Math.random() * 100);
     DATA['kinderzimmer'].when = new Date();
     DATA['kinderzimmer'].tendency = TENDENCIES[Math.floor(Math.random()*TENDENCIES.length)];
+    DATA['kinderzimmer'].battery = BATTERY[Math.floor(Math.random()*BATTERY.length)];
     DATA['wohnzimmer'].temperature = Math.round(Math.random() * 60);
     DATA['wohnzimmer'].humidity = Math.round(Math.random() * 100);
     DATA['wohnzimmer'].when = new Date();
     DATA['wohnzimmer'].tendency = TENDENCIES[Math.floor(Math.random()*TENDENCIES.length)];
+    DATA['wohnzimmer'].battery = BATTERY[Math.floor(Math.random()*BATTERY.length)];
     DATA['keller1'].temperature = Math.round(Math.random() * 60);
     DATA['keller1'].humidity = Math.round(Math.random() * 100);
     DATA['keller1'].when = new Date();
     DATA['keller1'].tendency = TENDENCIES[Math.floor(Math.random()*TENDENCIES.length)];
+    DATA['keller1'].battery = BATTERY[Math.floor(Math.random()*BATTERY.length)];
     DATA['schlafzimmer'].temperature = Math.round(Math.random() * 60);
     DATA['schlafzimmer'].humidity = Math.round(Math.random() * 100);
     DATA['schlafzimmer'].when = new Date();
     DATA['schlafzimmer'].tendency = TENDENCIES[Math.floor(Math.random()*TENDENCIES.length)];
+    DATA['schlafzimmer'].battery = BATTERY[Math.floor(Math.random()*BATTERY.length)];
   }, 5000);
   console.log(`Example app listening on port ${PORT}!`);
 });
